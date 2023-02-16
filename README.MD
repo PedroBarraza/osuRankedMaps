@@ -1,0 +1,1 @@
+Short program that really only exists to get all the ranked maps in osu from 2023. Doing this most as proof-of-concept. Will probably be refined and expanded later to instead dump things directly into a google sheets instead of dumping onto a csv with the google cloud api, but for now just working out how I want to get everything from the osu api itself.
