@@ -1,4 +1,5 @@
 var fs = require('fs');
+var osuAPI = require('./osuAPIfunctions.js');
 
 async function returnFetchResponse(fetchLink) {
     return fetch(fetchLink, {
