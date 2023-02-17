@@ -53,8 +53,9 @@ async function iteratesThroughDifficulties(beatmapDiffs) {
         }
         diffs.push(diffObject);
     }
+    //console.log(diffs);
     diffs.sort(function (a, b) {
-        return (a.SR < b.SR ? -1 : -1);
+        return (a.SR < b.SR ? -1 : 1);
     })
     for (i = 0; i < diffs.length; i++) {
         inputString += (
@@ -73,7 +74,8 @@ async function iteratesThroughDifficulties(beatmapDiffs) {
             '\n'
         );
     }
-    await writeDifficultiesCSV(inputString);
+    console.log(inputString);
+    //await writeDifficultiesCSV(inputString);
     return;
 }
 
@@ -108,7 +110,7 @@ async function iteratesThroughBeatmaps(beatmaps) {
         let beatmapSet = await osuAPI.getBeatmapSetDisc(api_key, beatmap['beatmapset_id']);
         await iteratesThroughSet(beatmapSet);
     };
-    await writeBeatmapCSV(inputString);
+    //await writeBeatmapCSV(inputString);
     return;
 }
 
