@@ -121,7 +121,19 @@ async function iteratesThroughBeatmaps(beatmaps) {
     return;
 }
 
+async function createsFiles(){
+    let inputString = 'beatmapset, beatmap_id, beatmapset_id, artist, title, mapper, date, bpm, total_length, map_count,\n';
+    fs.writeFile('beatmaps'+query_params.date_start+'_to_'+query_params.date_end+'.csv', inputString, function(err,file){
+        if(err) throw err;
+    })
+    inputString = 'url, artist, title, difficulty, SR, AR, OD, CS, HP, Circle Count, Slider Count, Spinner Count,\n'
+    fs.writeFile('beatmapDiffs'+query_params.date_start+'_to_'+query_params.date_end+'.csv', inputString, function(err,file){
+        if(err) throw err;
+    })
+}
+
 async function main() {
+    await createsFiles();
     api_key = await osuAPI.getAPIkey();
     let i = 0;
     const BaseURL = (
@@ -129,7 +141,7 @@ async function main() {
         '&date_start=' + query_params.date_start +
         '&date_end=' + query_params.date_end +
         '&query_order' + query_params.query_order +
-        '&offset=' + i);
+        '&offset=');
     let fetchLink = BaseURL + i;
     let { result_count, beatmaps } = await get2023beatmaps(fetchLink);
     let pageTotal = Math.floor(result_count / 18);
