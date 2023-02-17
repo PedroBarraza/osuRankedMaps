@@ -1,6 +1,13 @@
 var fs = require('fs');
 var osuAPI = require('./osuAPIfunctions.js');
 var api_key = '';
+//NOTE: dates are YYYY MM DD
+const query_params = {
+    'modes': 'Standard',
+    'date_start': '2023-01-01',
+    'date_end': '2023-02-01',
+    'query_order': '-date'
+}
 
 async function returnFetchResponse(fetchLink) {
     return fetch(fetchLink, {
@@ -117,7 +124,12 @@ async function iteratesThroughBeatmaps(beatmaps) {
 async function main() {
     api_key = await osuAPI.getAPIkey();
     let i = 0;
-    const BaseURL = 'https://osusearch.com/query/?statuses=Ranked&modes=Standard&date_start=2023-01-01&offset='
+    const BaseURL = (
+        'https://osusearch.com/query/?statuses=Ranked&modes=' + query_params.modes +
+        '&date_start=' + query_params.date_start +
+        '&date_end=' + query_params.date_end +
+        '&query_order' + query_params.query_order +
+        '&offset=' + i);
     let fetchLink = BaseURL + i;
     let { result_count, beatmaps } = await get2023beatmaps(fetchLink);
     let pageTotal = Math.floor(result_count / 18);
