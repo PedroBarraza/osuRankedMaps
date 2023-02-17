@@ -8,6 +8,10 @@ const query_params = {
     'date_end': '2023-02-01',
     'query_order': '-date'
 }
+var fileNames = {
+    'beatmaps': 'beatmaps'+query_params.date_start+'_to_'+query_params.date_end+'.csv',
+    'beatmapDiffs': 'beatmapDiffs'+query_params.date_start+'_to_'+query_params.date_end+'.csv'
+}
 
 async function returnFetchResponse(fetchLink) {
     return fetch(fetchLink, {
@@ -28,13 +32,13 @@ async function get2023beatmaps(fetchLink) {
 }
 
 async function writeBeatmapCSV(cleanInput) {
-    writeStream = fs.createWriteStream('beatmaps.csv', { 'flags': 'a' });
+    writeStream = fs.createWriteStream(fileNames.beatmaps, { 'flags': 'a' });
     writeStream.write(cleanInput);
     return;
 }
 
 async function writeDifficultiesCSV(cleanInput) {
-    writeStream = fs.createWriteStream('beatmapDiffs.csv', { 'flags': 'a' });
+    writeStream = fs.createWriteStream(fileNames.beatmapDiffs, { 'flags': 'a' });
     writeStream.write(cleanInput);
     return;
 }
@@ -60,7 +64,6 @@ async function iteratesThroughDifficulties(beatmapDiffs) {
         }
         diffs.push(diffObject);
     }
-    //console.log(diffs);
     diffs.sort(function (a, b) {
         return (a.SR < b.SR ? -1 : 1);
     })
@@ -81,8 +84,7 @@ async function iteratesThroughDifficulties(beatmapDiffs) {
             '\n'
         );
     }
-    console.log(inputString);
-    //await writeDifficultiesCSV(inputString);
+    await writeDifficultiesCSV(inputString);
     return;
 }
 
@@ -117,17 +119,17 @@ async function iteratesThroughBeatmaps(beatmaps) {
         let beatmapSet = await osuAPI.getBeatmapSetDisc(api_key, beatmap['beatmapset_id']);
         await iteratesThroughSet(beatmapSet);
     };
-    //await writeBeatmapCSV(inputString);
+    await writeBeatmapCSV(inputString);
     return;
 }
 
 async function createsFiles(){
-    let inputString = 'beatmapset, beatmap_id, beatmapset_id, artist, title, mapper, date, bpm, total_length, map_count,\n';
-    fs.writeFile('beatmaps'+query_params.date_start+'_to_'+query_params.date_end+'.csv', inputString, function(err,file){
+    let inputString = 'beatmapset, beatmap_id, beatmapset_id, artist, title, mapper, date, bpm, total_length, map_count,\n\n';
+    fs.writeFile(fileNames.beatmaps, inputString, function(err,file){
         if(err) throw err;
     })
-    inputString = 'url, artist, title, difficulty, SR, AR, OD, CS, HP, Circle Count, Slider Count, Spinner Count,\n'
-    fs.writeFile('beatmapDiffs'+query_params.date_start+'_to_'+query_params.date_end+'.csv', inputString, function(err,file){
+    inputString = 'url, artist, title, difficulty, SR, AR, OD, CS, HP, Circle Count, Slider Count, Spinner Count,\n\n'
+    fs.writeFile(fileNames.beatmapDiffs, inputString, function(err,file){
         if(err) throw err;
     })
 }
@@ -140,7 +142,7 @@ async function main() {
         'https://osusearch.com/query/?statuses=Ranked&modes=' + query_params.modes +
         '&date_start=' + query_params.date_start +
         '&date_end=' + query_params.date_end +
-        '&query_order' + query_params.query_order +
+        '&query_order=' + query_params.query_order +
         '&offset=');
     let fetchLink = BaseURL + i;
     let { result_count, beatmaps } = await get2023beatmaps(fetchLink);

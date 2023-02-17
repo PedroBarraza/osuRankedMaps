@@ -4,3 +4,5 @@ node_modules/.package-lock.json
 node_modules/fs/package.json
 node_modules/fs/README.md
 beatmapDiffs.csv
+beatmapDiffs2023-01-01_to_2023-02-01.csv
+beatmaps2023-01-01_to_2023-02-01.csv
